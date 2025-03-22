@@ -27,6 +27,7 @@ expenseRouter.get('/:id', (req, res) => {
 
 expenseRouter.post('/', (req, res) => {
     const newData = req.body
+    console.log(newData)
     if (!newData.amount || !newData.category) {
         res.status(400).send({ error: "Amount or category missing from request" })
     }

@@ -17,11 +17,14 @@ if (hExpenses == null) {
     hExpenses = [];
 }
 
-for (let i = 0; i < hExpenses.length; i++) {
-    let item = document.createElement("li")
-    item.textContent = "-$" + hExpenses[i].amount.toFixed(2) + " " + hExpenses[i].category;
-    item.style.color = "red";
-    expensesList.appendChild(item);
+function printList() {
+    for (let i = 0; i < hExpenses.length; i++) {
+        let item = document.createElement("li")
+        item.textContent = "-$" + hExpenses[i].amount.toFixed(2) + " " + hExpenses[i].category;
+        item.style.color = "red";
+        expensesList.appendChild(item);
+    }
+
 }
 
 function totalExp() {
@@ -86,8 +89,19 @@ function fetchExp() {
     fetch("/api/expenses")
         .then((response) => response.json())
         .then((data) => {
-            console.log(data)
+            hExpenses = data;
+            printList();
         });
+}
+
+function addExpense(expenseObject) {
+    fetch("/api/expenses", {
+        method: "POST",
+        body: JSON.stringify(expenseObject)
+    }).then((response) => response.json()) 
+    .then((data => {
+        console.log(data);
+    }))
 }
 
 fetchExp();
@@ -116,6 +130,7 @@ expBtn.addEventListener("click", () => {
         };
 
         hExpenses.push(newExpense);
+        addExpense(newExpense);
 
         localStorage.setItem("history", JSON.stringify(hExpenses));
 
